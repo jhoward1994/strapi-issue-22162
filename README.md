@@ -1,61 +1,88 @@
-# 🚀 Getting started with Strapi
+I'm using this repo to test https://github.com/strapi/strapi/issues/22162.
 
-Strapi comes with a full featured [Command Line Interface](https://docs.strapi.io/dev-docs/cli) (CLI) which lets you scaffold and manage your project in seconds.
+Created with `npx create-strapi-app@latest strapi-app-latest`
 
-### `develop`
+and then `npx @strapi/sdk-plugin@latest init test-plugin` in
+`plugins/test-plugin`
 
-Start your Strapi application with autoReload enabled. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-develop)
+You can read about the issue here: https://github.com/strapi/strapi/issues/22162
 
-```
-npm run develop
-# or
-yarn develop
-```
+This is the problematic code:
 
-### `start`
+```tsx
+// import { useStrapiApp } from '@strapi/admin/strapi-admin';
+import { useStrapiApp } from '@strapi/strapi/admin';
 
-Start your Strapi application with autoReload disabled. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-start)
+bootstrap(app: any) {
+console.log('Plugin bootstrap 123');
+app.getPlugin('content-manager').injectComponent('editView', 'right-links', {
+    name: 'test-plugin5',
+    Component: () => {
+    // Try to get any value (eg. components) from this hook and it will throw the error.
+    const components = useStrapiApp('TESTING', (value) => value.components);
+    console.log(components);
 
-```
-npm run start
-# or
-yarn start
-```
-
-### `build`
-
-Build your admin panel. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-build)
-
-```
-npm run build
-# or
-yarn build
-```
-
-## ⚙️ Deployment
-
-Strapi gives you many possible deployment options for your project including [Strapi Cloud](https://cloud.strapi.io). Browse the [deployment section of the documentation](https://docs.strapi.io/dev-docs/deployment) to find the best solution for your use case.
-
-```
-yarn strapi deploy
+    return (
+        <p>
+        <mark>PLUGIN TESTING 123</mark>
+        </p>
+    );
+    },
+});
+},
 ```
 
-## 📚 Learn more
+Using this hook causes the following error when running the app in production (not DEV mode):
 
-- [Resource center](https://strapi.io/resource-center) - Strapi resource center.
-- [Strapi documentation](https://docs.strapi.io) - Official Strapi documentation.
-- [Strapi tutorials](https://strapi.io/tutorials) - List of tutorials made by the core team and the community.
-- [Strapi blog](https://strapi.io/blog) - Official Strapi blog containing articles made by the Strapi team and the community.
-- [Changelog](https://strapi.io/changelog) - Find out about the Strapi product updates, new features and general improvements.
+```
+Error: `TESTING` must be used within `StrapiApp`
+    at http://localhost:1337/admin/strapi-BXRBqEF0.js:2488:6819
+    at FBn (http://localhost:1337/admin/strapi-BXRBqEF0.js:2488:6024)
+    at i (http://localhost:1337/admin/strapi-BXRBqEF0.js:2488:6786)
+    at Component (http://localhost:1337/admin/strapi-BXRBqEF0.js:6174:2634)
+    at UL (http://localhost:1337/admin/strapi-BXRBqEF0.js:199:387)
+    at ljt (http://localhost:1337/admin/strapi-BXRBqEF0.js:215:10154)
+    at Y9e (http://localhost:1337/admin/strapi-BXRBqEF0.js:217:12119)
+    at ppe (http://localhost:1337/admin/strapi-BXRBqEF0.js:234:2171)
+    at I7e (http://localhost:1337/admin/strapi-BXRBqEF0.js:230:22553)
+    at DBt (http://localhost:1337/admin/strapi-BXRBqEF0.js:230:22124)
+```
 
-Feel free to check out the [Strapi GitHub repository](https://github.com/strapi/strapi). Your feedback and contributions are welcome!
+Working in the monorepo I was able to resolve by using workspace references for dependencies and import the hooks from “@strapi/strapi"
 
-## ✨ Community
+Therefore, I believe the issue is caused by the plugin using a different version of @strapi/strapi than the one running the main Strapi app.
 
-- [Discord](https://discord.strapi.io) - Come chat with the Strapi community including the core team.
-- [Forum](https://forum.strapi.io/) - Place to discuss, ask questions and find answers, show your Strapi project and get feedback or just talk with other Community members.
-- [Awesome Strapi](https://github.com/strapi/awesome-strapi) - A curated list of awesome things related to Strapi.
+```json
+  "devDependencies": {
+    "@strapi/strapi": "workspace:*",
+    ...
+  },
+  "peerDependencies": {
+    "@strapi/strapi": "workspace:*",
+  }
+```
 
----
+```tsx
+// index.tsx
+import { useStrapiApp } from '@strapi/strapi/admin';
+...
+bootstrap(app: any) {
+console.log('Plugin bootstrap 123');
+app.getPlugin('content-manager').injectComponent('editView', 'right-links', {
+name: 'test-plugin5',
+Component: () => {
+// Try to get any value (eg. components) from this hook and it will throw the error.
+const components = useStrapiApp('TESTING', (value) => value.components);
+console.log(components);
 
-<sub>🤫 Psst! [Strapi is hiring](https://strapi.io/careers).</sub>
+        return (
+          <p>
+            <mark>TESTING</mark>
+          </p>
+        );
+      },
+    });
+
+},
+
+```
