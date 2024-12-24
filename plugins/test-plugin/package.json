@@ -41,7 +41,6 @@
   },
   "devDependencies": {
     "@strapi/sdk-plugin": "^5.2.8",
-    "@strapi/strapi": "^5.6.0",
     "@strapi/typescript-utils": "^5.6.0",
     "@types/react": "^19.0.2",
     "@types/react-dom": "^19.0.2",
