@@ -19,22 +19,21 @@ This was created with `npx create-strapi-app@latest strapi-app-latest`
 ```
 
 - Run `npm run develop -- --no-watch-admin`
-- Go to Post Content Type in Content Manager
+- Go to create a Post entry in the Content Manager
 - See the error
 
 - Run `npm run build; npm run start`
-- Go to Post Content Type in Content Manager
+- Go to create a Post entry in the Content Manager
 - See the error
 
 - Run `npm run develop`
-- Go to Post Content Type in Content Manager
+- Go to create a Post entry in the Content Manager
 - See no error.
 - Inconsistent results between dev and production.
 
 ## Passing Test Case
 
-- Undo what you did in the Failing Test Case (make sure the app is still not
-  installing the plugin locally)
+- Undo what you did in the Failing Test Case (make sure the app is not still installing the plugin locally)
 
 - Install the plugin from NPM `npm install @jhoward1994/test-plugin-issue-22162`
 - Run all test cases above.
