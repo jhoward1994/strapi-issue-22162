@@ -6,7 +6,7 @@ This was created with `npx create-strapi-app@latest strapi-app-latest`
 
 ### Install the failing plugin as a local plugin
 
-- Clone GIT_URL plugin into `src/plugins`
+- Clone `git@github.com:jhoward1994/strapi-issue-22162-plugin.git` plugin into `src/plugins`
 - Enable it through `config/plugins.ts`
 
 ```
@@ -33,7 +33,8 @@ This was created with `npx create-strapi-app@latest strapi-app-latest`
 
 ## Passing Test Case
 
-- Undo what you did in the Failing Test Case
+- Undo what you did in the Failing Test Case (make sure the app is still not
+  installing the plugin locally)
 
 - Install the plugin from NPM `npm install @jhoward1994/test-plugin-issue-22162`
 - Run all test cases above.
