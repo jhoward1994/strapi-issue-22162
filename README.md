@@ -10,26 +10,26 @@ This was created with `npx create-strapi-app@latest strapi-app-latest`
 - Enable it through `config/plugins.ts`
 
 ```
-    export default () => ({
-    "my-strapi-plugin": {
+export default () => ({
+    "test-plugin-issue-22162": {
         enabled: true,
         resolve: `./src/plugins/test-plugin-issue-22162`,
     },
-    });
+});
 ```
 
-- Run `npm run develop -- --no-watch-admin`
+- Run the app as `npm run develop -- --no-watch-admin`
 - Go to create a Post entry in the Content Manager
 - See the error
 
-- Run `npm run build; npm run start`
+- Run the app as `npm run build; npm run start`
 - Go to create a Post entry in the Content Manager
 - See the error
 
-- Run `npm run develop`
+- Run the app as `npm run develop`
 - Go to create a Post entry in the Content Manager
 - See no error.
-- Inconsistent results between dev and production.
+- Inconsistent results between dev and production vite build.
 
 ## Passing Test Case
 
@@ -38,6 +38,6 @@ This was created with `npx create-strapi-app@latest strapi-app-latest`
 - Install the plugin from NPM `npm install @jhoward1994/test-plugin-issue-22162`
 - Run all test cases above.
 - See no error.
-- Consistent results between dev and production.
+- Consistent results between dev and production vite build.
 
 - BONUS: test this as a workspace plugin. This behaves the same as NPM install.
