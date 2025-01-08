@@ -1,4 +1,4 @@
-# test-plugin-issue-22162
+# strapi-issue-22162-plugin
 
 This was created with `npx create-strapi-app@latest strapi-app-latest`
 
@@ -11,9 +11,9 @@ This was created with `npx create-strapi-app@latest strapi-app-latest`
 
 ```
 export default () => ({
-    "test-plugin-issue-22162": {
+    "strapi-issue-22162-plugin": {
         enabled: true,
-        resolve: `./src/plugins/test-plugin-issue-22162`,
+        resolve: `./src/plugins/strapi-issue-22162-plugin`,
     },
 });
 ```
