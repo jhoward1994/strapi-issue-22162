@@ -37,6 +37,19 @@ export default () => ({
 - Undo what you did in the Failing Test Case (make sure the app is not still installing the plugin locally)
 
 - Install the plugin from NPM `npm install @jhoward1994/test-plugin-issue-22162`
+
+  > **Note:** When installing from NPM, ensure you **no longer** have the plugin referenced in `config/plugins.ts` as:
+
+  ```
+  // This should be removed when the plugin is installed from NPM or as a workspace plugin
+  export default () => ({
+      "strapi-issue-22162-plugin": {
+          enabled: true,
+          resolve: PATH_TO_PLUGIN
+      },
+  });
+  ```
+
 - Run all test cases above.
 - See no error.
 - See consistent behaviour between dev and production vite build.
